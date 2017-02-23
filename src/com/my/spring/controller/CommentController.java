@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.my.spring.model.CommentEntity;
+import com.my.spring.model.CommentReplyEntity;
 /**
  * Created by nixinan on 2017/1/17.
  */
@@ -44,5 +45,24 @@ public class CommentController {
     {
 
         return commentService.getByPostsId(numPerPage,pageNum,postsId);
+    }
+    
+    
+    @RequestMapping(value="replyComment",method= RequestMethod.POST)
+    @ResponseBody
+    public DataWrapper<Void> replyComment(
+            @ModelAttribute CommentReplyEntity commentReplyEntity,
+            @RequestParam(value = "token",required = false) String token) {
+
+        return commentService.replyComment(commentReplyEntity, token);
+    }
+    
+    @RequestMapping(value="deleteReplyComment",method= RequestMethod.GET)
+    @ResponseBody
+    public DataWrapper<Void> deleteReplyComment(
+    		@RequestParam(value = "commentreplyid",required = true) Long commentReplyId,
+            @RequestParam(value = "token",required = false) String token) {
+
+        return commentService.deleteReplyComment(commentReplyId, token);
     }
 }

@@ -15,6 +15,18 @@ Date: 2017-02-15 11:31:50
 
 SET FOREIGN_KEY_CHECKS=0;
 
+
+
+DROP TABLE IF EXISTS `commentreply`;
+CREATE TABLE `commentreply` (
+  `commentreplyid` bigint(11) NOT NULL AUTO_INCREMENT,
+  `commentid` bigint(11) DEFAULT NULL,
+  `contents` varchar(255) DEFAULT NULL,
+  `time` datetime NULL DEFAULT NULL,
+  `userid` bigint(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`commentreplyid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 -- ----------------------------
 -- Table structure for comment
 -- ----------------------------

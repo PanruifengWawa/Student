@@ -87,6 +87,7 @@ public class CommentDaoImpl extends BaseDao<CommentEntity> implements CommentDao
         if (postsId != null) {
 			sql += " and c.postsid=" + postsId;
 		}
+        sql += " order by c.time desc";
         Query query=session.createSQLQuery(sql)
 				.addScalar("commentid",StandardBasicTypes.LONG)
 				.addScalar("postsid",StandardBasicTypes.LONG)

@@ -2,6 +2,7 @@ package com.my.spring.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * Created by nixinan on 2017/1/18.
@@ -17,8 +18,19 @@ public class CommentEntity {
     private String username;
     
     
+
+    private List<CommentReplyEntity> commentReplyEntity;
     
     @Transient
+    public List<CommentReplyEntity> getCommentReplyEntity() {
+		return commentReplyEntity;
+	}
+
+	public void setCommentReplyEntity(List<CommentReplyEntity> commentReplyEntity) {
+		this.commentReplyEntity = commentReplyEntity;
+	}
+
+	@Transient
     public String getUsername() {
 		return username;
 	}

@@ -43,4 +43,5 @@ public class CommunicationController {
 
         return communicationService.getCount();
     }
+    
 }
