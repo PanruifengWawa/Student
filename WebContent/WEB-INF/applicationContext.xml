@@ -34,6 +34,7 @@
                 <value>com.my.spring.model.TokenEntity</value>
                 <value>com.my.spring.model.FileEntity</value>
                 <value>com.my.spring.model.CommentReplyEntity</value>
+                <value>com.my.spring.model.ApplicationEntity</value>
             </list>
         </property>
     </bean>

@@ -11,5 +11,7 @@ public interface PostsService {
     DataWrapper<Void> add(PostsEntity posts,String token);
     DataWrapper<Void> delete(Long postsId,String token);
     DataWrapper<PostsEntity> getPostsById(Long postsId);
-    DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme,String title, String startTime, String endTime);
+    DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme,String title, String startTime, String endTime,Integer state);
+    
+    DataWrapper<Void> verify(Long postsid,Long state,String token);
 }

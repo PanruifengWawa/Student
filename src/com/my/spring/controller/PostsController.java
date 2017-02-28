@@ -50,8 +50,19 @@ public class PostsController {
             @RequestParam(value = "title",required = false) String title,
             @RequestParam(value = "starttime",required = false) String startTime,
             @RequestParam(value = "endtime",required = false) String endTime,
+            @RequestParam(value = "state",required = false) Integer state,
             @RequestParam(value = "token",required = false) String token){
 
-        return postsService.getPostsList(numPerPage,pageNum,theme,title,startTime,endTime);
+        return postsService.getPostsList(numPerPage,pageNum,theme,title,startTime,endTime,state);
+    }
+    
+    @RequestMapping(value="verify")
+    @ResponseBody
+    public DataWrapper<Void> verify(
+            @RequestParam(value = "state",required = false) Long state,
+            @RequestParam(value = "postsid",required = false) Long postsid,
+            @RequestParam(value = "token",required = false) String token){
+
+        return postsService.verify(postsid,state,token);
     }
 }

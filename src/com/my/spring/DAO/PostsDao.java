@@ -13,8 +13,10 @@ public interface PostsDao {
     boolean add(PostsEntity posts);
     boolean delete(Long postsId);
     boolean readPost(Long postsId);
-    DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme,String title, String startTime, String endTime);
+    DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme,String title, String startTime, String endTime,Integer state);
     PostsEntity getPosts(Long postsId);
     BigInteger getPostCount();
     BigInteger getTodayPostCount();
+    
+    boolean verify(Long postsid,Long state);
 }

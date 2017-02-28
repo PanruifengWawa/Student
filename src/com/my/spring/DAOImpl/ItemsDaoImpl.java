@@ -59,10 +59,7 @@ public class ItemsDaoImpl  extends BaseDao<ItemsEntity> implements ItemsDao{
         if (pageNum == null) {
 			pageNum = 1;
 		}
-        criteria.setProjection(Projections.rowCount());
-        int totalltemNum = ((Long) criteria.uniqueResult()).intValue();
-        int totalPageNum = DaoUtils.getTotalPageNum(totalltemNum, numPerPage);
-        criteria.setProjection(null);
+        
         if (numPerPage > 0 && pageNum > 0) {
             criteria.setMaxResults(numPerPage);
             criteria.setFirstResult((pageNum - 1) * numPerPage);
@@ -93,6 +90,12 @@ public class ItemsDaoImpl  extends BaseDao<ItemsEntity> implements ItemsDao{
         if (type != null) {
             criteria.add(Restrictions.eq("type", type));
         }
+        
+        criteria.setProjection(Projections.rowCount());
+        int totalltemNum = ((Long) criteria.uniqueResult()).intValue();
+        int totalPageNum = DaoUtils.getTotalPageNum(totalltemNum, numPerPage);
+        criteria.setProjection(null);
+        
         retDataWrapper.setCurrentPage(pageNum);
         retDataWrapper.setNumberPerPage(numPerPage);
         retDataWrapper.setTotalPage(totalPageNum);

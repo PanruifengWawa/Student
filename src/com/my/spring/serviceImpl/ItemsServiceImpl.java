@@ -1,5 +1,6 @@
 package com.my.spring.serviceImpl;
 
+import com.my.spring.DAO.ApplicationDao;
 import com.my.spring.DAO.ItemsDao;
 import com.my.spring.enums.ErrorCodeEnum;
 import com.my.spring.service.ItemsService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.my.spring.model.ApplicationEntity;
 import com.my.spring.model.ItemsEntity;
 import com.my.spring.model.UserEntity;
 
@@ -26,6 +28,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ItemsServiceImpl  implements ItemsService{
     @Autowired
     ItemsDao itemsDao;
+    
+    @Autowired
+    ApplicationDao applicationDao;
 
     @Override
     public DataWrapper<Void> add(ItemsEntity items,String token,MultipartFile exitbasicfile,MultipartFile memberdemandfile,HttpServletRequest request) {
@@ -109,5 +114,51 @@ public class ItemsServiceImpl  implements ItemsService{
         } else retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
         return retDataWrapper;
     }
+
+	@Override
+	public DataWrapper<Void> apply(Long itemsid, String token) {
+		// TODO Auto-generated method stub
+		DataWrapper<Void> retDataWrapper = new DataWrapper<Void>();
+        UserEntity userEntity = SessionManager.getSession(token);
+        if (userEntity == null || itemsid == null) {
+        	retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+        	return retDataWrapper;
+		}
+        ApplicationEntity applicationEntity = new ApplicationEntity();
+        applicationEntity.setItemsid(itemsid);
+        applicationEntity.setState(0);
+        applicationEntity.setTime(new Timestamp(System.currentTimeMillis()));
+        applicationEntity.setUserid(userEntity.getUserid());
+        applicationEntity.setUsername(userEntity.getUsername());
+        if (!applicationDao.addApplication(applicationEntity)) {
+        	retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+		}
+        
+		return retDataWrapper;
+	}
+
+	@Override
+	public DataWrapper<List<ApplicationEntity>> getApplicationList(Long itemsid,Integer state, String token) {
+		// TODO Auto-generated method stub
+		return applicationDao.getApplicationList(itemsid, state);
+	}
+
+	@Override
+	public DataWrapper<Void> handleApplication(Long applicationid, Integer state, String token) {
+		// TODO Auto-generated method stub
+		DataWrapper<Void> retDataWrapper = new DataWrapper<Void>();
+        UserEntity userEntity = SessionManager.getSession(token);
+        if (userEntity == null || applicationid == null || state == null) {
+        	retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+        	return retDataWrapper;
+		}
+        if (!applicationDao.handleApplication(applicationid, state)) {
+        	retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+		}
+        
+        return retDataWrapper;
+        
+        
+	}
 
 }

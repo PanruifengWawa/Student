@@ -32,7 +32,7 @@ public class PostsDaoImpl extends BaseDao<PostsEntity> implements PostsDao{
     }
 
     @Override
-    public DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme, String title, String startTime, String endTime) {
+    public DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme, String title, String startTime, String endTime,Integer state) {
         DataWrapper<List<PostsEntity>> retDataWrapper = new DataWrapper<List<PostsEntity>>();
         List<PostsEntity> ret = new ArrayList<PostsEntity>();
         Session session = getSession();
@@ -43,10 +43,6 @@ public class PostsDaoImpl extends BaseDao<PostsEntity> implements PostsDao{
         if (pageNum == null) {
 			pageNum = 1;
 		}
-        criteria.setProjection(Projections.rowCount());
-        int totalltemNum = ((Long) criteria.uniqueResult()).intValue();
-        int totalPageNum = DaoUtils.getTotalPageNum(totalltemNum, numPerPage);
-        criteria.setProjection(null);
         if (numPerPage > 0 && pageNum > 0) {
             criteria.setMaxResults(numPerPage);
             criteria.setFirstResult((pageNum - 1) * numPerPage);
@@ -68,6 +64,18 @@ public class PostsDaoImpl extends BaseDao<PostsEntity> implements PostsDao{
                 criteria.add(Restrictions.between("time", Date.valueOf(startTime), Date.valueOf(endTime)));
             }
         }
+        if (state != null) {
+            criteria.add(Restrictions.eq("state", state));
+        }
+        
+        
+        criteria.setProjection(Projections.rowCount());
+        int totalltemNum = ((Long) criteria.uniqueResult()).intValue();
+        int totalPageNum = DaoUtils.getTotalPageNum(totalltemNum, numPerPage);
+        criteria.setProjection(null);
+        
+        
+        
         retDataWrapper.setCurrentPage(pageNum);
         retDataWrapper.setNumberPerPage(numPerPage);
         retDataWrapper.setTotalPage(totalPageNum);
@@ -164,6 +172,23 @@ public class PostsDaoImpl extends BaseDao<PostsEntity> implements PostsDao{
         try {
         	Query query = session.createSQLQuery(sql);
         	query.setParameter(0, postsId);
+            query.executeUpdate();
+        } catch (Exception e) {
+			// TODO: handle exception
+        	e.printStackTrace();
+        	return false;
+		}
+        
+        return true;
+	}
+
+	@Override
+	public boolean verify(Long postsid, Long state) {
+		// TODO Auto-generated method stub
+		Session session = getSession();
+        String sql = "update posts set state='" + state + "' where postsid=" + postsid;
+        try {
+        	Query query = session.createSQLQuery(sql);
             query.executeUpdate();
         } catch (Exception e) {
 			// TODO: handle exception

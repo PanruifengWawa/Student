@@ -16,6 +16,16 @@ Date: 2017-02-15 11:31:50
 SET FOREIGN_KEY_CHECKS=0;
 
 
+DROP TABLE IF EXISTS `application`;
+CREATE TABLE `application` (
+  `applicationid` bigint(11) NOT NULL AUTO_INCREMENT,
+  `userid` bigint(11) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `time` datetime NULL DEFAULT NULL,
+  `itemsid` bigint(11) DEFAULT NULL,
+  `state` int DEFAULT 0,
+  PRIMARY KEY (`applicationid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `commentreply`;
 CREATE TABLE `commentreply` (
@@ -129,7 +139,7 @@ CREATE TABLE `news` (
   `userid` bigint(11) DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `time` datetime NULL DEFAULT NULL,
-  `contents` varchar(255) DEFAULT NULL,
+  `contents` LONGTEXT DEFAULT NULL,
   `state` bigint(255) DEFAULT NULL,
   PRIMARY KEY (`newsid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -153,6 +163,7 @@ CREATE TABLE `posts` (
   `title` varchar(255) DEFAULT NULL,
   `contents` varchar(255) DEFAULT NULL,
   `time` datetime NULL DEFAULT NULL,
+  `state` bigint(255) DEFAULT NULL,
   PRIMARY KEY (`postsid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

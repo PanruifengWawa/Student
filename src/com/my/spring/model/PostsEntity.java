@@ -16,11 +16,23 @@ public class PostsEntity {
     private String contents;
     private Long readcount;
     private Timestamp time;
+    private Integer state;
     
     private String username;
     
 
-    @Transient
+    
+    @Basic
+    @Column(name = "state")
+    public Integer getState() {
+		return state;
+	}
+
+	public void setState(Integer state) {
+		this.state = state;
+	}
+
+	@Transient
     public String getUsername() {
 		return username;
 	}

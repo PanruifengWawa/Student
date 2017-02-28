@@ -1,6 +1,7 @@
 package com.my.spring.service;
 
 import com.my.spring.utils.DataWrapper;
+import com.my.spring.model.ApplicationEntity;
 import com.my.spring.model.ItemsEntity;
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface ItemsService {
     DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage,Integer pageNum,String itemtype,String itemname, String teacher, String starttime, String endtime,Long type, Long state);
     DataWrapper<ItemsEntity> getItems(Long itemsid);
     DataWrapper<Void> verify(Long itemsid,Long state,String token);
+    
+    DataWrapper<Void> apply(Long itemsid,String token);
+    DataWrapper<List<ApplicationEntity>> getApplicationList(Long itemsid,Integer state,String token);
+    DataWrapper<Void> handleApplication(Long applicationid,Integer state,String token);
 }

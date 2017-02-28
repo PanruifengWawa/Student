@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.my.spring.model.ApplicationEntity;
 import com.my.spring.model.ItemsEntity;
 import java.util.List;
 
@@ -80,6 +81,35 @@ public class ItemsController  {
             @RequestParam(value = "token",required = false) String token){
 
         return itemsService.getItemsList(numPerPage, pageNum, itemtype,itemname,teacher,starttime,endtime,type,state);
+    }
+    
+    @RequestMapping(value="apply",method = RequestMethod.POST)
+    @ResponseBody
+    public DataWrapper<Void> apply(
+            @RequestParam(value = "itemsid",required = true) Long itemsid,
+            @RequestParam(value = "token",required = false) String token) {
+
+        return itemsService.apply(itemsid, token);
+    }
+    
+    @RequestMapping(value="getApplicationList",method = RequestMethod.GET)
+    @ResponseBody
+    public DataWrapper<List<ApplicationEntity>> getApplicationList(
+            @RequestParam(value = "itemsid",required = true) Long itemsid,
+            @RequestParam(value = "state",required = false) Integer state,
+            @RequestParam(value = "token",required = false) String token) {
+
+        return itemsService.getApplicationList(itemsid, state,token);
+    }
+    
+    @RequestMapping(value="handleApplication",method = RequestMethod.POST)
+    @ResponseBody
+    public DataWrapper<Void> handleApplication(
+            @RequestParam(value = "applicationid",required = true) Long applicationid,
+            @RequestParam(value = "state",required = true) Integer state,
+            @RequestParam(value = "token",required = false) String token) {
+
+        return itemsService.handleApplication(applicationid, state, token);
     }
 
 }

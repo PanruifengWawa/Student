@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public DataWrapper<Void> delete(Long userId,String token) {
         DataWrapper<Void> dataWrapper = new DataWrapper<Void>();
         UserEntity userEntity = SessionManager.getSession(token);
-        if (userEntity == null ||userEntity.getUserid() != userId) {
+        if (userEntity == null ||userEntity.getUsertype() != 4) {
         	dataWrapper.setErrorCode(ErrorCodeEnum.Error);
         	return dataWrapper;
 		}
@@ -64,6 +64,7 @@ public class UserServiceImpl implements UserService {
         	userEntity.setEmail(user.getEmail());
         	userEntity.setTelephone(user.getTelephone());
         	userEntity.setPersonalbrief(user.getPersonalbrief());
+//        	userEntity.setPersonaltag(user.getPersonaltag());
             if(userDao.updateUser(userEntity)) {
                 retDataWrapper.setErrorCode(ErrorCodeEnum.No_Error);
             } else retDataWrapper.setErrorCode(ErrorCodeEnum.Error);

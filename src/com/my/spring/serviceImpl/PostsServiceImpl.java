@@ -37,6 +37,7 @@ public class PostsServiceImpl implements PostsService{
 		}
         posts.setUserid(userEntity.getUserid());
         posts.setReadcount(new Long(0));
+        posts.setState(0);
         if(posts.getTitle() != null && posts.getContents() != null && postsDao.add(posts))
         {
             return data;
@@ -77,7 +78,29 @@ public class PostsServiceImpl implements PostsService{
     }
 
     @Override
-    public DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme, String title, String startTime, String endTime) {
-        return postsDao.getPostsList(numPerPage,pageNum,theme,title,startTime,endTime);
+    public DataWrapper<List<PostsEntity>> getPostsList(Integer numPerPage,Integer pageNum,String theme, String title, String startTime, String endTime,Integer state) {
+        return postsDao.getPostsList(numPerPage,pageNum,theme,title,startTime,endTime,state);
     }
+
+	@Override
+	public DataWrapper<Void> verify(Long postsid, Long state, String token) {
+		// TODO Auto-generated method stub
+		DataWrapper<Void> retDataWrapper = new DataWrapper<Void>();
+        UserEntity userEntity = SessionManager.getSession(token);
+        if (userEntity == null) {
+        	retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+        	return retDataWrapper;
+		}
+        
+        
+        if(postsid!=null&&state!=null)
+        {
+            if(postsDao.verify(postsid,state))
+            {
+                retDataWrapper.setErrorCode(ErrorCodeEnum.No_Error);
+            }else retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+        } else retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+
+        return retDataWrapper;
+	}
 }
