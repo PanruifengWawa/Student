@@ -111,6 +111,7 @@ CREATE TABLE `items` (
   `labels` varchar(255) DEFAULT NULL,
   `exitbasicfilesrc` varchar(255) DEFAULT NULL,
   `memberdemandfilesrc` varchar(255) DEFAULT NULL,
+  `imgfilesrc` varchar(255) DEFAULT NULL,
   `projectdirection` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`itemid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -247,3 +248,15 @@ INSERT INTO `user` VALUES ('7', 'a', '2', 'a', 'a', 'a', 'a', 'a', '1', '21', '2
 INSERT INTO `user` VALUES ('8', 'x', '1', 'x', 'x', 'x', 'x', 'x', '1', 'x', '2017-01-18 14:50:01');
 INSERT INTO `user` VALUES ('9', 'j', '1', 'j', 'j', 'j', 'j', 'j', '1', 'j', '2017-01-18 14:50:03');
 INSERT INTO `user` VALUES ('10', 'i', '1', 'k', 'k', 'k', 'k', 'k', '1', 'k', '2017-01-18 14:50:06');
+
+
+drop trigger if exists addPeopleTrigger;
+delimiter || 
+create trigger addPeopleTrigger after update on application for each row   
+begin 
+	
+	if old.state = 0 and new.state = 1 then
+		update items set now_people = (case when now_people is null then 1 else now_people + 1 end) where items.itemid = new.itemsid;
+	end if;
+end||
+delimiter ;

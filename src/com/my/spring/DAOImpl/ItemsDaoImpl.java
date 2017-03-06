@@ -7,6 +7,7 @@ import com.my.spring.utils.DataWrapper;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -48,7 +49,7 @@ public class ItemsDaoImpl  extends BaseDao<ItemsEntity> implements ItemsDao{
     }
 
     @Override
-    public DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage,Integer pageNum,String itemType,String itemName, String teacher, String starttime, String endtime,Long type, Long state){
+    public DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage,Integer pageNum,String itemType,String itemName, String teacher, String starttime, String endtime,Long type, Long state,Long userid,String projectdirection,String labels){
     	DataWrapper<List<ItemsEntity>> retDataWrapper = new DataWrapper<List<ItemsEntity>>();
         List<ItemsEntity> ret = new ArrayList<ItemsEntity>();
         Session session = getSession();
@@ -60,10 +61,7 @@ public class ItemsDaoImpl  extends BaseDao<ItemsEntity> implements ItemsDao{
 			pageNum = 1;
 		}
         
-        if (numPerPage > 0 && pageNum > 0) {
-            criteria.setMaxResults(numPerPage);
-            criteria.setFirstResult((pageNum - 1) * numPerPage);
-        }
+        
         if (itemType != null) {
             criteria.add(Restrictions.like("itemtype", itemType));
         }
@@ -91,10 +89,26 @@ public class ItemsDaoImpl  extends BaseDao<ItemsEntity> implements ItemsDao{
             criteria.add(Restrictions.eq("type", type));
         }
         
+        if (userid != null) {
+        	 criteria.add(Restrictions.eq("userid", userid));
+		}
+        
+        if (projectdirection != null) {
+       	 	criteria.add(Restrictions.like("projectdirection", projectdirection));
+		}
+        if (labels != null) {
+        	criteria.add(Restrictions.like("labels",labels,MatchMode.ANYWHERE));
+		}
+        
         criteria.setProjection(Projections.rowCount());
         int totalltemNum = ((Long) criteria.uniqueResult()).intValue();
         int totalPageNum = DaoUtils.getTotalPageNum(totalltemNum, numPerPage);
         criteria.setProjection(null);
+        
+        if (numPerPage > 0 && pageNum > 0) {
+            criteria.setMaxResults(numPerPage);
+            criteria.setFirstResult((pageNum - 1) * numPerPage);
+        }
         
         retDataWrapper.setCurrentPage(pageNum);
         retDataWrapper.setNumberPerPage(numPerPage);
@@ -109,4 +123,10 @@ public class ItemsDaoImpl  extends BaseDao<ItemsEntity> implements ItemsDao{
     public ItemsEntity getItems(Long itemsId) {
         return get(itemsId);
     }
+
+	@Override
+	public boolean updateItem(ItemsEntity items) {
+		// TODO Auto-generated method stub
+		return update(items);
+	}
 }

@@ -32,9 +32,10 @@ public class CommunicationController {
 //            @RequestParam(value = "username",required = false) String userName,
 //            @RequestParam(value = "replyquantity",required = false) Long replyQuantity,
 //            @RequestParam(value = "contents",required = false) String contents,
+            @RequestParam(value = "state",required = false) Integer state,
             @RequestParam(value = "token",required = false) String token){
 
-        return communicationService.getCommunicationList(numPerPage,pageNum,theme,title);
+        return communicationService.getCommunicationList(numPerPage,pageNum,theme,title,state);
     }
     
     @RequestMapping(value="getCounts",method = RequestMethod.GET)

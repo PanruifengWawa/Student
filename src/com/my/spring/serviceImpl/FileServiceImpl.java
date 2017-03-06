@@ -93,9 +93,9 @@ public class FileServiceImpl implements FileService{
 	}
 
 	@Override
-	public DataWrapper<List<FileEntity>> getMaterialList() {
+	public DataWrapper<List<FileEntity>> getMaterialList(Integer numPerPage,Integer pageNum) {
 		// TODO Auto-generated method stub
-		return fileDao.findByType(0);
+		return fileDao.findByType(0, numPerPage, pageNum);
 	}
 
 	@Override
@@ -112,5 +112,38 @@ public class FileServiceImpl implements FileService{
 		}
         
         return dataWrapper;
+	}
+
+	@Override
+	public DataWrapper<String> uploadFile(HttpServletRequest request, MultipartFile file, String token) {
+		// TODO Auto-generated method stub
+		DataWrapper<String> dataWrapper = new DataWrapper<String>();
+		UserEntity userEntity = SessionManager.getSession(token);
+        if (userEntity == null || file == null) {
+        	dataWrapper.setErrorCode(ErrorCodeEnum.Error);
+		} else {
+			String filePath = request.getSession().getServletContext().getRealPath("/") + "/upload_files/";
+			String newFileName = MD5Util.getMD5String(file.getOriginalFilename() + new Date() + UUID.randomUUID().toString()).replace(".","")
+                    + file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+			File fileDir = new File(filePath);
+			if (!fileDir.exists()) {
+				fileDir.mkdirs();
+			}
+			try {
+	            FileOutputStream out = new FileOutputStream(filePath + newFileName);
+	                // 写入文件
+	            out.write(file.getBytes());
+	            out.flush();
+	            out.close();
+	            dataWrapper.setData("/upload_files/" + newFileName);
+			} catch (Exception e) {
+	            e.printStackTrace();
+	            dataWrapper.setErrorCode(ErrorCodeEnum.Error);
+	        }
+			
+
+		}
+		return dataWrapper;
 	}
 }

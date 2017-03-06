@@ -22,11 +22,15 @@ public class CommunicationDaoImpl extends BaseDao<CommunicationEntity>implements
 
 	@Override
 	public DataWrapper<List<CommunicationEntity>> getCommunicationList(Integer numPerPage, Integer pageNum,
-			String theme, String title) {
+			String theme, String title,Integer state) {
 		// TODO Auto-generated method stub
 		DataWrapper<List<CommunicationEntity>> dataWrapper=new DataWrapper<List<CommunicationEntity>>();
 		List<CommunicationEntity> ret = null;
 		String sql = "select p.postsid as postsId,p.theme as theme,p.title as title, u.username as userName,p.time as publishedTime, p.read_count as readCount from posts p, user u where p.userid = u.userid";
+		
+		if (state != null) {
+			sql += " and p.state = " + state;
+		}
 		if (theme != null) {
 			sql += " and p.theme LIKE '%"+theme+"%'";
 		}

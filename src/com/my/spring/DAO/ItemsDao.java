@@ -7,9 +7,9 @@ import java.util.List;
  */
 public interface ItemsDao {
     boolean add(ItemsEntity items);
-    boolean update(ItemsEntity items);
+    boolean updateItem(ItemsEntity items);
     boolean delete(Long itemsid);
     boolean verify(Long itemsid,Long state);
-    DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage,Integer pageNum,String itemtype,String itemname, String teacher, String starttime, String endtime,Long type, Long state);
+    DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage,Integer pageNum,String itemtype,String itemname, String teacher, String starttime, String endtime,Long type, Long state,Long userid, String projectdirection,String labels);
     ItemsEntity getItems(Long itemsid);
 }

@@ -49,8 +49,10 @@ public class FileController {
 	
 	 @RequestMapping(value="getMaterialList",method = RequestMethod.GET)
 	 @ResponseBody
-	 public DataWrapper<List<FileEntity>> getMaterialList() {
-		 return fileService.getMaterialList();
+	 public DataWrapper<List<FileEntity>> getMaterialList(
+			 @RequestParam(value = "numperpage",required = false) Integer numPerPage,
+	         @RequestParam(value = "pagenum",required = false) Integer pageNum) {
+		 return fileService.getMaterialList(numPerPage,pageNum);
 	 }	
 	 
 	 @RequestMapping(value="delete",method = RequestMethod.GET)
@@ -60,4 +62,15 @@ public class FileController {
 			 @RequestParam(value = "token",required = false) String token) {
 		 return fileService.deleteFile(fileId,token);
 	 }	
+	 
+	 
+	 @RequestMapping(value="upload",method = RequestMethod.POST)
+	@ResponseBody
+	public DataWrapper<String> upload(
+	          @RequestParam(value = "file", required = false) MultipartFile file,
+	          HttpServletRequest request,
+	          @RequestParam(value = "token",required = false) String token) {
+			
+		return fileService.uploadFile(request, file, token);
+	}
 }

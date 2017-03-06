@@ -31,13 +31,28 @@ public class ItemsController  {
             @RequestParam(value = "end",required = false) String endtime,
             @RequestParam(value = "exitbasicfile", required = false) MultipartFile exitbasicfile,
             @RequestParam(value = "memberdemandfile", required = false) MultipartFile memberdemandfile,
+            @RequestParam(value = "imgfile", required = false) MultipartFile imgfile,
             HttpServletRequest request,
             @RequestParam(value = "token",required = false) String token)
     {
     	items.setStarttime(DateUtil.parse(starttime));
     	items.setEndtime(DateUtil.parse(endtime));
-        return itemsService.add(items, token, exitbasicfile, memberdemandfile,request);
+        return itemsService.add(items, token, exitbasicfile, memberdemandfile,imgfile,request);
     }
+    
+    @RequestMapping(value="update",method= RequestMethod.POST)
+    @ResponseBody
+    public DataWrapper<Void> update(
+    		@RequestParam(value = "itemsid", required = true) Long itemsid,
+    		@ModelAttribute ItemsEntity items,
+            @RequestParam(value = "imgfile", required = false) MultipartFile imgfile,
+            HttpServletRequest request,
+            @RequestParam(value = "token",required = false) String token)
+    {
+        return itemsService.update(itemsid,items,imgfile,request,token);
+    }
+    
+    
     @RequestMapping(value="delete")
     @ResponseBody
     public DataWrapper<Void> delete(
@@ -78,9 +93,12 @@ public class ItemsController  {
             @RequestParam(value = "endtime",required = false) String endtime,
             @RequestParam(value = "type",required = false) Long type,
             @RequestParam(value = "state",required = false) Long state,
+            @RequestParam(value = "userid",required = false) Long userid,
+            @RequestParam(value = "projectdirection",required = false) String projectdirection,
+            @RequestParam(value = "labels",required = false) String labels,
             @RequestParam(value = "token",required = false) String token){
 
-        return itemsService.getItemsList(numPerPage, pageNum, itemtype,itemname,teacher,starttime,endtime,type,state);
+        return itemsService.getItemsList(numPerPage, pageNum, itemtype,itemname,teacher,starttime,endtime,type,state,userid,projectdirection,labels);
     }
     
     @RequestMapping(value="apply",method = RequestMethod.POST)

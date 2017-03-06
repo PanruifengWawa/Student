@@ -29,8 +29,8 @@ public class CommunicationServiceImpl implements CommunicationService {
     PostsDao postsDao;
     
     @Override
-    public DataWrapper<List<CommunicationEntity>> getCommunicationList(Integer numPerPage, Integer pageNum, String theme, String title) {
-    	DataWrapper<List<CommunicationEntity>> dataWrapper = communicationDao.getCommunicationList(numPerPage, pageNum, theme, title);
+    public DataWrapper<List<CommunicationEntity>> getCommunicationList(Integer numPerPage, Integer pageNum, String theme, String title,Integer state) {
+    	DataWrapper<List<CommunicationEntity>> dataWrapper = communicationDao.getCommunicationList(numPerPage, pageNum, theme, title,state);
     	for(CommunicationEntity communicationEntity: dataWrapper.getData()) {
     		communicationEntity.setReplyCount(commentDao.getCommentCount(communicationEntity.getPostsId()));
     		CommentEntity commentEntity = commentDao.getLatestCommentByPostsid(communicationEntity.getPostsId());

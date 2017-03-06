@@ -12,7 +12,7 @@ public interface FileDao {
     boolean addFile(FileEntity file);
     boolean deleteFile(Long fileId);
     boolean updateFile(FileEntity file);
-    DataWrapper<List<FileEntity>> findByType(Integer type);
+    DataWrapper<List<FileEntity>> findByType(Integer type,Integer numPerPage,Integer pageNum);
     FileEntity getFileById(Long id);
     List<FileEntity> getFileByIds(String ids);
 }

@@ -7,6 +7,7 @@ import com.my.spring.utils.DataWrapper;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -35,23 +36,42 @@ public class FileDaoImpl extends BaseDao<FileEntity> implements FileDao {
     }
 
     @Override
-    public DataWrapper<List<FileEntity>> findByType(Integer type) {
+    public DataWrapper<List<FileEntity>> findByType(Integer type,Integer numPerPage,Integer pageNum) {
         DataWrapper<List<FileEntity>> retDataWrapper = new DataWrapper<List<FileEntity>>();
+        
+        if (numPerPage == null) {
+			numPerPage = 10;
+		}
+        if (pageNum == null) {
+			pageNum = 1;
+		}
+        
         List<FileEntity> ret = new ArrayList<FileEntity>();
         Session session = getSession();
         Criteria criteria = session.createCriteria(FileEntity.class);
         if(type != null) {
-            if(type<=6) {
-                criteria.add(Restrictions.le("type", 6));
-            }else{
-                criteria.add(Restrictions.eq("type", type));
-            }
+        	criteria.add(Restrictions.eq("type", type));
         }
+        
+        criteria.setProjection(Projections.rowCount());
+        int totalltemNum = ((Long) criteria.uniqueResult()).intValue();
+        int totalPageNum = DaoUtils.getTotalPageNum(totalltemNum, numPerPage);
+        criteria.setProjection(null);
+        
+        if (numPerPage > 0 && pageNum > 0) {
+            criteria.setMaxResults(numPerPage);
+            criteria.setFirstResult((pageNum - 1) * numPerPage);
+        }
+        
         try {
             ret = criteria.list();
         }catch (Exception e){
             System.out.println(e);
         }
+        retDataWrapper.setCurrentPage(pageNum);
+        retDataWrapper.setNumberPerPage(numPerPage);
+        retDataWrapper.setTotalPage(totalPageNum);
+        retDataWrapper.setTotalNumber(totalltemNum);
         retDataWrapper.setData(ret);
         return retDataWrapper;
     }

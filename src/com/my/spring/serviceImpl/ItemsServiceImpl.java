@@ -33,11 +33,14 @@ public class ItemsServiceImpl  implements ItemsService{
     ApplicationDao applicationDao;
 
     @Override
-    public DataWrapper<Void> add(ItemsEntity items,String token,MultipartFile exitbasicfile,MultipartFile memberdemandfile,HttpServletRequest request) {
+    public DataWrapper<Void> add(ItemsEntity items,String token,MultipartFile exitbasicfile,MultipartFile memberdemandfile,MultipartFile imgfile,HttpServletRequest request) {
     	items.setTime(new Timestamp(System.currentTimeMillis()));
     	items.setReleasedate(new Timestamp(System.currentTimeMillis()));
     	items.setExitbasicfilesrc(FileUtils.saveFile(exitbasicfile, request));
     	items.setMemberdemandfilesrc(FileUtils.saveFile(memberdemandfile, request));
+    	items.setImgfilesrc(FileUtils.saveFile(imgfile, request));
+    	
+    	items.setNowpeople(0);
         DataWrapper<Void> data = new DataWrapper<Void>();
         UserEntity userEntity = SessionManager.getSession(token);
         if (userEntity == null) {
@@ -55,8 +58,32 @@ public class ItemsServiceImpl  implements ItemsService{
     }
 
     @Override
-    public DataWrapper<Void> update(ItemsEntity items) {
-        return null;
+    public DataWrapper<Void> update(Long itemsid,ItemsEntity items,MultipartFile imgfile,HttpServletRequest request,String token) {
+    	DataWrapper<Void> data = new DataWrapper<Void>();
+        UserEntity userEntity = SessionManager.getSession(token);
+        if (userEntity == null || itemsid == null) {
+        	data.setErrorCode(ErrorCodeEnum.Error);
+        	return data;
+		}
+        ItemsEntity newItems = itemsDao.getItems(itemsid);
+        if (newItems == null || newItems.getUserid() != userEntity.getUserid()) {
+        	data.setErrorCode(ErrorCodeEnum.Error);
+        	return data;
+		}
+        newItems.setItemname(items.getItemname());
+        newItems.setItemleader(items.getItemleader());
+        newItems.setTeacher(items.getTeacher());
+        newItems.setType(items.getType());
+        newItems.setKeywords(items.getKeywords());
+        newItems.setItembrief(items.getItembrief());
+        newItems.setItemresult(items.getItemresult());
+        newItems.setItemcyle(items.getItemcyle());
+        newItems.setTelephone(items.getTelephone());
+        newItems.setImgfilesrc(FileUtils.saveFile(imgfile, request));
+        if (!itemsDao.updateItem(newItems)) {
+        	data.setErrorCode(ErrorCodeEnum.Error);
+		}
+        return data;
     }
 
     @Override
@@ -78,8 +105,8 @@ public class ItemsServiceImpl  implements ItemsService{
     }
 
     @Override
-    public DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage, Integer pageNum, String itemtype, String itemname, String teacher, String starttime, String endtime, Long type, Long state) {
-        return itemsDao.getItemsList(numPerPage, pageNum, itemtype, itemname, teacher, starttime, endtime, type, state);
+    public DataWrapper<List<ItemsEntity>> getItemsList(Integer numPerPage, Integer pageNum, String itemtype, String itemname, String teacher, String starttime, String endtime, Long type, Long state,Long userid,String projectdirection,String labels) {
+        return itemsDao.getItemsList(numPerPage, pageNum, itemtype, itemname, teacher, starttime, endtime, type, state ,userid, projectdirection,labels);
     }
 
     @Override

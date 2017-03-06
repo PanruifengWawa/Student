@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface CommunicationService {
 	DataWrapper<CommunicationCounts> getCount();
-    DataWrapper<List<CommunicationEntity>> getCommunicationList(Integer numPerPage,Integer pageNum,String theme,String title);
+    DataWrapper<List<CommunicationEntity>> getCommunicationList(Integer numPerPage,Integer pageNum,String theme,String title,Integer state);
 }

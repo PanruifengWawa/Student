@@ -46,9 +46,21 @@ public class ItemsEntity {
     private String memberdemandfilesrc;
     private String projectdirection;
     
+    private String imgfilesrc;
+    
     
     
     @Basic
+    @Column(name = "imgfilesrc")
+    public String getImgfilesrc() {
+		return imgfilesrc;
+	}
+
+	public void setImgfilesrc(String imgfilesrc) {
+		this.imgfilesrc = imgfilesrc;
+	}
+
+	@Basic
     @Column(name = "projectdirection")
     public String getProjectdirection() {
 		return projectdirection;
