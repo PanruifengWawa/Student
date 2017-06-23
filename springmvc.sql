@@ -235,6 +235,8 @@ CREATE TABLE `user` (
 
 
 alter table user add column personal_tag varchar(1000);
+
+alter table user add column type int;
 -- ----------------------------
 -- Records of user
 -- ----------------------------

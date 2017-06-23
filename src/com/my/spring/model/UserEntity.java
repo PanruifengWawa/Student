@@ -22,9 +22,22 @@ public class UserEntity {
     private Timestamp registertime;
     private String personaltag;
     
+    private Integer type;
+    
+    
     
     
     @Basic
+    @Column(name = "type")
+    public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	@Basic
     @Column(name = "personal_tag")
     public String getPersonaltag() {
 		return personaltag;

@@ -7,6 +7,7 @@ import com.my.spring.service.UserService;
 import com.my.spring.utils.DataWrapper;
 import com.my.spring.utils.SessionManager;
 
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.my.spring.model.*;
@@ -163,6 +164,7 @@ public class UserServiceImpl implements UserService {
             if(userEntity != null && userEntity.getPassword()!= null && userEntity.getUsername()!= null
                     && userEntity.getStudentid()!= null) {
                 userEntity.setUsertype(0);
+                userEntity.setType(1);
                 userEntity.setRegistertime(new Timestamp(System.currentTimeMillis()));
                 if(userDao.addUser(userEntity))
                     retDataWrapper.setErrorCode(ErrorCodeEnum.No_Error);
@@ -196,6 +198,47 @@ public class UserServiceImpl implements UserService {
 		}
         
         return retDataWrapper;
+	}
+
+	@Override
+	public DataWrapper<Void> adminlogin(Long studentid, String password) {
+		// TODO Auto-generated method stub
+		DataWrapper<Void> retDataWrapper = new DataWrapper<Void>();
+        UserEntity user = userDao.findBystudentid(studentid);
+        if (user != null) {
+            if (user.getType()== 0  && user.getPassword().equals(password)) {
+                retDataWrapper.setCallStatus(CallStatusEnum.SUCCEED);
+                SessionManager.removeSessionByUserId(user.getUserid());
+				String token = SessionManager.newSession(user);
+				retDataWrapper.setToken(token);
+            } else {
+                retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+            }
+        }
+        else {
+            retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+        }
+        return retDataWrapper;
+	}
+
+	@Override
+	public DataWrapper<Void> setAdmin(Long userId, Integer type,String token) {
+		// TODO Auto-generated method stub
+		DataWrapper<Void> retDataWrapper = new DataWrapper<Void>();
+        UserEntity admin = SessionManager.getSession(token);
+        if (admin != null && admin.getType()==0 && userId != null) {
+        	UserEntity user = userDao.getUserById(userId);
+        	if (user != null) {
+				user.setType(type);
+				if (!userDao.updateUser(user)) {
+					retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+				}
+			}
+			
+		} else {
+			retDataWrapper.setErrorCode(ErrorCodeEnum.Error);
+		}
+		return retDataWrapper;
 	}
 
 }

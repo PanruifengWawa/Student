@@ -41,10 +41,97 @@ public class UserController {
         return  userService.getUserList();
     }*/
 
+    /**
+	* @api {post} api/user/admin/login 管理员登录
+	* @apiName admin_login
+	* @apiGroup user
+	*
+	* @apiParam {String} studentid * 用户名（必须）
+	* @apiParam {String} password * 密码（必须）
+	*
+	* @apiSuccessExample {json} Success-Response:
+	* 	HTTP/1.1 200 ok
+	* 	{
+	*		"callStatus": "SUCCEED",
+	*		"errorCode": "No_Error",
+	*  		"data":null,
+	*  		"token": "SK1d7a4fe3-c2cd-417f-8f6f-bf7412592996",
+	*  		"numberPerPage": 0,
+	*  		"currentPage": 0,
+	*  		"totalNumber": 0,
+	*  		"totalPage": 0
+	*	}
+	*
+	* @apiSuccessExample {json} Error-Response:
+	* 	HTTP/1.1 200 ok
+	* 	{
+	* 		"callStatus": "FAILED",
+	*		"errorCode": "Error",
+	*  		"data": null,
+	*  		"token": null,
+	* 		"numberPerPage": 0,
+	*  		"currentPage": 0,
+	*  		"totalNumber": 0,
+	*  		"totalPage": 0
+	*	}
+	**/
+    @RequestMapping(value = "admin/login",method = RequestMethod.POST)
+    @ResponseBody
+    public DataWrapper<Void> adminLogin(@RequestParam(value = "studentid",required = true) Long studentid,
+                        @RequestParam(value = "password",required = true) String password){
+
+        return userService.adminlogin(studentid,password);
+    }
+    
+    /**
+   	* @api {post} api/user/setAdmin 设置管理员
+   	* @apiName admin_setAdmin
+   	* @apiGroup user
+   	*
+   	* @apiParam {String} userId * 用户id（必须）
+   	* @apiParam {String} type * 用户类型（必须,0-管理员,1-用户）
+   	* @apiParam {String} token * 凭证（必须）
+   	*
+   	* @apiSuccessExample {json} Success-Response:
+   	* 	HTTP/1.1 200 ok
+   	* 	{
+   	*		"callStatus": "SUCCEED",
+   	*		"errorCode": "No_Error",
+   	*  		"data":null,
+   	*  		"token": null,
+   	*  		"numberPerPage": 0,
+   	*  		"currentPage": 0,
+   	*  		"totalNumber": 0,
+   	*  		"totalPage": 0
+   	*	}
+   	*
+   	* @apiSuccessExample {json} Error-Response:
+   	* 	HTTP/1.1 200 ok
+   	* 	{
+   	* 		"callStatus": "FAILED",
+   	*		"errorCode": "Error",
+   	*  		"data": null,
+   	*  		"token": null,
+   	* 		"numberPerPage": 0,
+   	*  		"currentPage": 0,
+   	*  		"totalNumber": 0,
+   	*  		"totalPage": 0
+   	*	}
+   	**/
+    @RequestMapping(value = "setAdmin",method = RequestMethod.POST)
+    @ResponseBody
+    public DataWrapper<Void> setAdmin(
+    		@RequestParam(value = "userId",required = true) Long userId,
+    		@RequestParam(value = "type",required = true) Integer type,
+    		@RequestParam(value = "token",required = true) String token
+    		){
+
+        return userService.setAdmin(userId,type,token);
+    }
     
     @RequestMapping(value = "login",method = RequestMethod.POST)
     @ResponseBody
-    public DataWrapper<Void> verifyUser(@RequestParam(value = "studentid",required = true) Long studentid,
+    public DataWrapper<Void> login(@RequestParam(value = "studentid",required = true) Long studentid,
                         @RequestParam(value = "password",required = true) String password){
 
         return userService.login(studentid,password);

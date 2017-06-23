@@ -6,12 +6,14 @@ import com.my.spring.model.TokenEntity;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by nixinan on 2017/2/14.
  */
+@Repository
 public class TokenDaoImpl extends BaseDao<TokenEntity> implements TokenDao
 {
     @Override

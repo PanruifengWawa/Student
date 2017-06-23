@@ -20,4 +20,7 @@ public interface UserService {
     DataWrapper<Void> login(Long studentid,String password);
     DataWrapper<Void> register(UserEntity userEntity);
     DataWrapper<List<UserEntity>> getUserList(Integer numPerPage,Integer pageNum,String userName,Long studentId,String department,String major,Integer userType,String telephone);
+    
+    DataWrapper<Void> adminlogin(Long studentid,String password);
+    DataWrapper<Void> setAdmin(Long userId,Integer type,String token);
 }
